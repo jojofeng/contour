@@ -2,7 +2,7 @@
 
 Find a word by the shape of what you mean.
 
-Add words or phrases that point toward the meaning you're after and weight them. Steer away from senses you don't want, nudge attributes (more positive, more intense, more technical, more formal, more concrete), and shape how it sounds: softer or sharper, a set number of syllables, a starting sound, a rhyme. Contour ranks about 100,000 English words and phrases by how well they fit, and shows its working: every score breaks down into its parts, and "Show the geometry" draws where the suggestions sit relative to your words.
+Add words or phrases that point toward the meaning you're after and weight them. Steer away from senses you don't want, nudge attributes (more positive, more intense, more technical, more formal, more concrete), and (optionally) shape how it sounds: softer or sharper, a set number of syllables, a starting sound, a rhyme. The sound controls are switched off for now; set `SOUND_CONTROLS = true` in `web/src/main.ts` to bring them back. Contour ranks about 100,000 English words and phrases by how well they fit, and shows its working: every score breaks down into its parts, and "Show the geometry" draws where the suggestions sit relative to your words.
 
 No language model writes the suggestions. They come from distances in an embedding space plus a few transparent, editable sound and frequency features. The point is to test whether meaning has usable geometric structure.
 

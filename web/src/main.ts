@@ -13,13 +13,11 @@ const DATA_URL = "./data";
 const STORE_KEY = "contour.v1";
 const PICKS_KEY = "contour.picks.v1";
 
-interface Preset { label: string; pot: [string, number][]; settings: Partial<Settings> }
-const PRESETS: Preset[] = [
-  { label: "Hard, in a good way", pot: [["difficult", 1], ["exhilarating", 0.8]], settings: { beta: 2, dials: { intensity: 0.5, valence: 0.5, technicality: 0.5 } } },
-  { label: "A soft, clear sky", pot: [["sky", 1], ["clear", 1], ["glow", 0.7], ["cloud", -1]], settings: { beta: 4, softness: 0.8 } },
-  { label: "Laughing quietly", pot: [["laugh", 1], ["quietly", 1]], settings: { beta: 2 } },
-  { label: "Pet + fish", pot: [["pet", 1], ["fish", 1]], settings: { beta: 4 } },
-];
+/**
+ * Sound controls (softness, syllables, starts like, rhymes with) are switched
+ * off for now. Set to true to bring the Sound section back; nothing else changes.
+ */
+const SOUND_CONTROLS = false;
 
 const defaults = (space: Space): Settings => ({
   beta: DEFAULT_BETA,
@@ -146,12 +144,9 @@ function syncControls(): void {
   ($("hide-offensive") as HTMLInputElement).checked = settings.hideOffensive;
 }
 
-function applyPreset(p: Preset): void {
-  pot = [];
-  for (const [t, w] of p.pot) addToPot(t, w);
-  settings = { ...defaults(space), ...p.settings, dials: { ...defaults(space).dials, ...(p.settings.dials ?? {}) } };
-  selected = -1;
-  renderPot(); syncControls(); update();
+/** Settings as loaded or restored, with the sound filters neutral while they are switched off. */
+function withSoundPolicy(st: Settings): Settings {
+  return SOUND_CONTROLS ? st : { ...st, softness: 0, syllables: 0, startsLike: "", rhymesWith: "" };
 }
 
 function save(): void {
@@ -246,14 +241,6 @@ function wire(): void {
     renderPot(); update();
   });
 
-  const presetBox = $("presets");
-  for (const p of PRESETS) {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "quiet"; b.textContent = p.label;
-    b.addEventListener("click", () => applyPreset(p));
-    presetBox.appendChild(b);
-  }
-
   const num = (id: string, set: (v: number) => void) =>
     $(id).addEventListener("input", (e) => { set(Number((e.target as HTMLInputElement).value)); syncControls(); update(); });
   num("beta", (v) => (settings.beta = v));
@@ -333,13 +320,12 @@ async function boot(): Promise<void> {
   const saved = store.get<{ pot?: [string, number][]; settings?: Settings }>(STORE_KEY, {});
   $("picks-count").textContent = String(store.get<Pick[]>(PICKS_KEY, []).length);
   wire();
-  if (saved.pot && saved.settings) {
-    settings = { ...defaults(space), ...saved.settings, dials: { ...defaults(space).dials, ...saved.settings.dials } };
-    for (const [t, w] of saved.pot) addToPot(t, w);
-    renderPot(); syncControls(); update();
-  } else {
-    applyPreset(PRESETS[0]);
-  }
+  settings = saved.settings
+    ? withSoundPolicy({ ...defaults(space), ...saved.settings, dials: { ...defaults(space).dials, ...saved.settings.dials } })
+    : defaults(space);
+  for (const [t, w] of saved.pot ?? []) addToPot(t, w);
+  $("sound-block").hidden = !SOUND_CONTROLS;
+  renderPot(); syncControls(); update();
 }
 
 boot();

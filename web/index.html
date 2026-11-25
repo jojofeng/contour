@@ -39,7 +39,6 @@
         </form>
         <p class="error" id="add-error" role="alert" hidden></p>
         <ul class="pot" id="pot-list"></ul>
-        <div class="presets" id="presets"><span>Try</span></div>
       </div>
     </section>
 
@@ -58,7 +57,8 @@
         <div id="dials"></div>
       </div>
 
-      <div class="block">
+      <!-- Hidden while SOUND_CONTROLS is false in src/main.ts -->
+      <div class="block" id="sound-block" hidden>
         <h2>Sound</h2>
         <div class="dial">
           <label for="softness">Softness</label>
