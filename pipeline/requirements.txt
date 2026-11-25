@@ -1,0 +1,13 @@
+# Data pipeline. Python 3.10+.
+numpy>=1.26
+wordfreq>=3.1
+nltk>=3.9
+cmudict>=1.0
+g2p_en>=2.1
+better_profanity>=0.7
+# Embedding backends. For the default (Qwen3-Embedding) you also need PyTorch;
+# CPU-only: pip install torch --index-url https://download.pytorch.org/whl/cpu
+sentence-transformers>=3.3
+transformers>=4.51
+onnxruntime>=1.18
+tokenizers>=0.20

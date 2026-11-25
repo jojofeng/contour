@@ -1,0 +1,12 @@
+{
+  "_about": "Per-phoneme 'softness' weights (ARPAbet, stress digits removed). +1 = round/soft ('bouba'), -1 = sharp/spiky ('kiki'). Based on the direction of effects reported in the sound-symbolism literature (e.g. Nielsen & Rendall 2011; Cwiek et al. 2022): sonorants, voiced stops and rounded back vowels read as round; voiceless stops and front unrounded vowels as spiky. Magnitudes are a judgement call - edit freely and rebuild.",
+  "phonemes": {
+    "M": 1.0, "N": 0.9, "NG": 0.7, "L": 1.0, "W": 0.7, "R": 0.4, "Y": 0.3,
+    "B": 0.6, "D": 0.3, "G": 0.2,
+    "V": 0.2, "DH": 0.1, "ZH": 0.1, "Z": -0.1, "JH": -0.3,
+    "HH": -0.2, "F": -0.4, "TH": -0.4, "SH": -0.4, "S": -0.6,
+    "P": -0.6, "T": -0.8, "CH": -0.8, "K": -1.0,
+    "UW": 1.0, "OW": 1.0, "AO": 0.8, "UH": 0.7, "AW": 0.6, "OY": 0.5, "AA": 0.4, "AH": 0.2, "ER": 0.1,
+    "AY": -0.1, "AE": -0.2, "EH": -0.3, "EY": -0.4, "IH": -0.6, "IY": -0.9
+  }
+}

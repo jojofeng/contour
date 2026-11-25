@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contour</title>
+  <meta name="description" content="Find a word by the shape of its meaning and sound." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Onest:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Contour</h1>
+      <p>Find a word by the shape of what you mean.</p>
+    </div>
+    <div class="top-actions">
+      <label class="switch">
+        <input type="checkbox" id="hood-toggle" />
+        <span class="track" aria-hidden="true"></span>
+        Show the geometry
+      </label>
+      <button type="button" class="quiet" id="picks-button">Your picks <span id="picks-count">0</span></button>
+    </div>
+  </header>
+
+  <p class="stand-in" id="stand-in" hidden></p>
+
+  <main class="layout" id="app" aria-busy="true">
+    <section class="controls pot-section" aria-label="Words it’s like">
+      <div class="block">
+        <h2>Words it’s like</h2>
+        <p class="hint">Add words or phrases. Slide right to pull toward one; slide below zero to steer away from it.</p>
+        <form class="add" id="add-form" autocomplete="off">
+          <label class="sr-only" for="add-input">Add a word or phrase</label>
+          <input id="add-input" type="text" placeholder="Add a word or phrase" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="suggest-list" aria-autocomplete="list" />
+          <ul class="suggest" id="suggest-list" role="listbox" hidden></ul>
+        </form>
+        <p class="error" id="add-error" role="alert" hidden></p>
+        <ul class="pot" id="pot-list"></ul>
+        <div class="presets" id="presets"><span>Try</span></div>
+      </div>
+    </section>
+
+    <section class="controls tune-section" aria-label="Tuning">
+      <div class="block">
+        <h2>How to combine them</h2>
+        <div class="range-row">
+          <input type="range" id="beta" min="0" max="4" step="0.1" aria-describedby="beta-help" />
+          <div class="ends"><span>Blend them</span><span>Fit every one</span></div>
+        </div>
+        <p class="hint" id="beta-help">Blending finds words between your words. Toward “fit every one”, a word must be close to each of them, not just one.</p>
+      </div>
+
+      <div class="block">
+        <h2>Shade of meaning</h2>
+        <div id="dials"></div>
+      </div>
+
+      <div class="block">
+        <h2>Sound</h2>
+        <div class="dial">
+          <label for="softness">Softness</label>
+          <input type="range" id="softness" min="-1" max="1" step="0.05" />
+          <div class="ends"><span>sharp, kiki</span><span>soft, bouba</span></div>
+        </div>
+        <div class="fields">
+          <label>Syllables
+            <select id="syllables">
+              <option value="0">Any</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+            </select>
+          </label>
+          <label>Starts like <input id="starts-like" type="text" placeholder="e.g. lull" spellcheck="false" /></label>
+          <label>Rhymes with <input id="rhymes-with" type="text" placeholder="e.g. tune" spellcheck="false" /></label>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2>Filters</h2>
+        <div class="dial">
+          <label for="rarity">Rare words</label>
+          <input type="range" id="rarity" min="0" max="1" step="0.05" />
+          <div class="ends"><span>treat like any other</span><span>downplay</span></div>
+        </div>
+        <label class="check"><input type="checkbox" id="phrases" /> Include phrases</label>
+        <label class="check"><input type="checkbox" id="hide-offensive" /> Hide vulgar and offensive words</label>
+      </div>
+    </section>
+
+    <section class="results" aria-label="Closest words">
+      <div class="results-head">
+        <h2>Closest words</h2>
+        <p class="timing" id="timing"></p>
+      </div>
+      <p class="loading" id="loading">Loading the vocabulary…</p>
+      <ol class="result-list" id="results"></ol>
+      <p class="empty" id="empty" hidden>Add a word to start, or turn a dial to explore the whole vocabulary.</p>
+      <details class="explain">
+        <summary>What the score means</summary>
+        <p>Each word’s similarity to each of your words is converted to standard deviations above a typical word in the vocabulary (σ). The score combines those, then adds the dials. A score of 4σ means the word is unusually close; it is not a probability. The bar compares each word to the top result.</p>
+      </details>
+    </section>
+
+    <section class="hood" id="hood" aria-label="The geometry" hidden>
+      <div class="results-head"><h2>The geometry</h2></div>
+      <p class="hint" id="map-help"></p>
+      <div class="fig" id="map"><svg role="img" aria-label="Map of suggestions relative to your words"></svg></div>
+      <div class="equation" id="equation"></div>
+    </section>
+  </main>
+
+  <dialog id="picks-dialog">
+    <form method="dialog" class="dialog-body">
+      <h2>Your picks</h2>
+      <p class="hint">Each time you mark a word with “This one”, Contour saves your words, settings and the word’s rank, in this browser only. Later versions can learn from this.</p>
+      <ol id="picks-list"></ol>
+      <div class="dialog-actions">
+        <button type="button" id="copy-picks">Copy as JSON</button>
+        <button type="button" class="quiet" id="clear-picks">Clear</button>
+        <button class="quiet">Close</button>
+      </div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

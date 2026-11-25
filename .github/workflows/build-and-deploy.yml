@@ -1,0 +1,100 @@
+# Builds the vocabulary space with Qwen3-Embedding on a free GitHub runner,
+# tests the app against it, and publishes the site to GitHub Pages.
+#
+# One-time setup: repository Settings -> Pages -> Source: "GitHub Actions".
+# Then push to main, or run this workflow by hand (Actions tab) to pick a model.
+
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Hugging Face embedding model"
+        default: "Qwen/Qwen3-Embedding-0.6B"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A push during a build waits for it rather than cancelling a long embedding run.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  PYTHONUNBUFFERED: "1"
+  MODEL: ${{ inputs.model || 'Qwen/Qwen3-Embedding-0.6B' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/requirements.txt
+
+      # Embedding ~100k entries takes a while on CPU, so the result is cached
+      # and only rebuilt when the pipeline code, its data files or the model change.
+      - name: Restore built space
+        id: space-cache
+        uses: actions/cache@v4
+        with:
+          path: web/public/data
+          key: space-${{ env.MODEL }}-${{ hashFiles('pipeline/**') }}
+
+      - name: Install pipeline
+        if: steps.space-cache.outputs.cache-hit != 'true'
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r pipeline/requirements.txt
+
+      - name: Build the space
+        if: steps.space-cache.outputs.cache-hit != 'true'
+        working-directory: pipeline
+        run: python -m contour_pipeline.build --model "$MODEL" --out ../web/public/data
+
+      - name: Evaluate (results appear in the log)
+        working-directory: pipeline
+        run: |
+          pip install numpy >/dev/null
+          python -m contour_pipeline.evaluate --data ../web/public/data --show
+
+      - name: Regenerate the parity fixture
+        working-directory: pipeline
+        run: python -m tests.make_parity_fixture
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Test and build the web app
+        working-directory: web
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

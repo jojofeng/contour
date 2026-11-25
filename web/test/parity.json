@@ -1,0 +1,189 @@
+[
+ {
+  "pot": [
+   [
+    "difficult",
+    1.0
+   ],
+   [
+    "exciting",
+    0.8
+   ]
+  ],
+  "beta": 2.0,
+  "dials": {
+   "technicality": 0.6,
+   "valence": 0.5
+  },
+  "softness": 0,
+  "rarity": 0.5,
+  "top": [
+   {
+    "text": "challenging",
+    "score": 6.9082
+   },
+   {
+    "text": "gratifying",
+    "score": 6.508
+   },
+   {
+    "text": "rewarding",
+    "score": 6.2725
+   },
+   {
+    "text": "enjoyable",
+    "score": 5.9856
+   },
+   {
+    "text": "sexually attractive",
+    "score": 5.8058
+   },
+   {
+    "text": "advantageous",
+    "score": 5.5376
+   },
+   {
+    "text": "worthwhile",
+    "score": 5.444
+   },
+   {
+    "text": "compelling",
+    "score": 5.3702
+   },
+   {
+    "text": "satisfying",
+    "score": 5.3304
+   },
+   {
+    "text": "rewardingly",
+    "score": 5.3001
+   }
+  ]
+ },
+ {
+  "pot": [
+   [
+    "laugh",
+    1.0
+   ],
+   [
+    "quiet",
+    1.0
+   ]
+  ],
+  "beta": 0.0,
+  "dials": {},
+  "softness": 0.0,
+  "rarity": 0.0,
+  "top": [
+   {
+    "text": "bellylaugh",
+    "score": 7.5857
+   },
+   {
+    "text": "express joy",
+    "score": 7.3243
+   },
+   {
+    "text": "cachinnate",
+    "score": 7.3045
+   },
+   {
+    "text": "cachinnation",
+    "score": 7.2835
+   },
+   {
+    "text": "laughter",
+    "score": 7.0229
+   },
+   {
+    "text": "chuckle",
+    "score": 6.8611
+   },
+   {
+    "text": "pipe down",
+    "score": 6.7366
+   },
+   {
+    "text": "giggle",
+    "score": 6.7051
+   },
+   {
+    "text": "stilly",
+    "score": 6.5608
+   },
+   {
+    "text": "laugh loudly",
+    "score": 6.5168
+   }
+  ]
+ },
+ {
+  "pot": [
+   [
+    "sky",
+    1.0
+   ],
+   [
+    "clear",
+    1.0
+   ],
+   [
+    "glow",
+    0.7
+   ],
+   [
+    "cloud",
+    -1.0
+   ]
+  ],
+  "beta": 4.0,
+  "dials": {
+   "intensity": -0.4
+  },
+  "softness": 0.8,
+  "rarity": 0.3,
+  "top": [
+   {
+    "text": "illuminated",
+    "score": 3.9405
+   },
+   {
+    "text": "luminous",
+    "score": 3.8008
+   },
+   {
+    "text": "yellow",
+    "score": 3.5667
+   },
+   {
+    "text": "illumination",
+    "score": 3.4832
+   },
+   {
+    "text": "illumine",
+    "score": 3.4521
+   },
+   {
+    "text": "luminance",
+    "score": 3.4009
+   },
+   {
+    "text": "goldenrod",
+    "score": 3.3061
+   },
+   {
+    "text": "lumina",
+    "score": 3.2924
+   },
+   {
+    "text": "show",
+    "score": 3.1383
+   },
+   {
+    "text": "yellow light",
+    "score": 3.1214
+   }
+  ]
+ }
+]

@@ -1,0 +1,47 @@
+{
+  "_about": "Seed words defining each attribute dial. 'pairs' isolate an attribute by contrasting near-synonyms that differ mainly in that attribute; 'negative'/'positive' sets contrast two groups. Add, remove or edit dials here and rebuild; the app reads whatever dials the build produces.",
+  "axes": [
+    {
+      "key": "valence",
+      "label": "Valence",
+      "negative_label": "negative",
+      "positive_label": "positive",
+      "description": "Emotional tone: unpleasant to pleasant.",
+      "negative": ["bad", "terrible", "awful", "dreadful", "horrible", "miserable", "ugly", "nasty", "unpleasant", "sad", "hateful", "disgusting", "painful", "gloomy", "cruel", "hopeless", "depressing", "tedious", "vile", "wretched", "grim", "bleak"],
+      "positive": ["good", "wonderful", "delightful", "joyful", "lovely", "beautiful", "excellent", "pleasant", "happy", "admirable", "brilliant", "cheerful", "gracious", "splendid", "kind", "hopeful", "inspiring", "thrilling", "charming", "marvelous", "rewarding", "glorious"]
+    },
+    {
+      "key": "intensity",
+      "label": "Intensity",
+      "negative_label": "mild",
+      "positive_label": "intense",
+      "description": "Strength of the same idea: warm to scorching.",
+      "pairs": [["warm", "scorching"], ["like", "adore"], ["dislike", "loathe"], ["cool", "freezing"], ["glad", "ecstatic"], ["sad", "devastated"], ["small", "minuscule"], ["big", "colossal"], ["tired", "exhausted"], ["annoyed", "furious"], ["good", "superb"], ["bad", "atrocious"], ["hard", "grueling"], ["interesting", "fascinating"], ["pretty", "stunning"], ["afraid", "terrified"], ["hungry", "starving"], ["quiet", "silent"], ["worried", "panicked"], ["happy", "euphoric"], ["surprised", "astonished"], ["dirty", "filthy"], ["wet", "drenched"], ["upset", "distraught"]]
+    },
+    {
+      "key": "technicality",
+      "label": "Technicality",
+      "negative_label": "everyday",
+      "positive_label": "technical",
+      "description": "Register: plain words to scientific or specialist terms for the same thing.",
+      "pairs": [["sweat", "perspiration"], ["bruise", "contusion"], ["itch", "pruritus"], ["nosebleed", "epistaxis"], ["fat", "lipid"], ["spread", "diffusion"], ["bend", "flexion"], ["swelling", "edema"], ["sugar", "glucose"], ["rust", "oxidation"], ["guess", "hypothesis"], ["growth", "proliferation"], ["breathing", "respiration"], ["chewing", "mastication"], ["sleepiness", "somnolence"], ["speed", "velocity"], ["size", "magnitude"], ["shape", "morphology"], ["randomness", "stochasticity"], ["pattern", "topology"], ["hardness", "rigidity"], ["shine", "luminance"], ["fading", "attenuation"], ["mixing", "convection"]]
+    },
+    {
+      "key": "formality",
+      "label": "Formality",
+      "negative_label": "casual",
+      "positive_label": "formal",
+      "description": "Register: casual to formal, for words that mean the same thing (buy to purchase).",
+      "pairs": [["buy", "purchase"], ["start", "commence"], ["help", "assist"], ["enough", "sufficient"], ["show", "demonstrate"], ["get", "obtain"], ["ask", "inquire"], ["end", "terminate"], ["need", "require"], ["tell", "inform"], ["try", "attempt"], ["use", "utilize"], ["about", "approximately"], ["maybe", "perhaps"], ["think", "consider"], ["big", "substantial"], ["answer", "respond"], ["kids", "children"], ["job", "occupation"], ["mistake", "error"], ["fix", "rectify"], ["house", "residence"], ["leave", "depart"], ["hurry", "expedite"]]
+    },
+    {
+      "key": "concreteness",
+      "label": "Concreteness",
+      "negative_label": "abstract",
+      "positive_label": "concrete",
+      "description": "Abstract ideas to things you can see and touch.",
+      "negative": ["idea", "justice", "freedom", "truth", "theory", "belief", "concept", "meaning", "notion", "essence", "possibility", "virtue", "logic", "purpose", "democracy", "faith", "hope", "wisdom", "principle", "honesty"],
+      "positive": ["table", "stone", "apple", "hammer", "river", "chair", "dog", "bread", "window", "rope", "shoe", "mountain", "cup", "tree", "brick", "spoon", "car", "feather", "bottle", "nail"]
+    }
+  ]
+}
