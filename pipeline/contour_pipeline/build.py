@@ -27,7 +27,7 @@ from pathlib import Path
 import numpy as np
 
 from .axes import build_axes
-from .embedders import make_embedder
+from .embedders import default_prompt, make_embedder
 from .geometry import build_space, quantise
 from .lexicon import build_lexicon
 from .phonetics import analyse
@@ -49,6 +49,9 @@ def main() -> None:
     ap.add_argument("--model", default="Qwen/Qwen3-Embedding-0.6B")
     ap.add_argument("--onnx-folder")
     ap.add_argument("--vectors-file")
+    ap.add_argument("--prompt", default=None,
+                    help="instruction placed before every entry (sentence-transformers only); "
+                         "defaults to a word-meaning instruction for Qwen3-Embedding, else none. Pass '' for none.")
     ap.add_argument("--dims", type=int, default=256, help="dimensions kept after PCA")
     ap.add_argument("--drop-top", type=int, default=1, help="leading principal components removed (all-but-the-top)")
     ap.add_argument("--max-common-words", type=int, default=60_000)
@@ -65,7 +68,10 @@ def main() -> None:
     print(f"    {len(lexicon):,} entries ({sum(e.is_phrase for e in lexicon):,} phrases)")
 
     print(f"2/5 embeddings with {args.model}")
-    embedder = make_embedder(args.backend, args.model, args.onnx_folder, args.vectors_file)
+    prompt = default_prompt(args.model) if args.prompt is None else args.prompt
+    if prompt:
+        print(f"    instruction: {prompt!r}")
+    embedder = make_embedder(args.backend, args.model, args.onnx_folder, args.vectors_file, prompt)
     raw = embedder.embed([e.text for e in lexicon])
     has_vector = ~np.isnan(raw).any(axis=1)
     if not has_vector.all():
@@ -116,6 +122,7 @@ def main() -> None:
 
     meta = {
         "model": args.model,
+        "prompt": prompt if args.backend == "sentence-transformers" else "",
         "backend": args.backend,
         "stand_in": args.backend != "sentence-transformers",
         "count": len(lexicon),

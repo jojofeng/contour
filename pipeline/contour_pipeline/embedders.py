@@ -13,9 +13,11 @@ The rest of the pipeline never needs to know which model produced them.
   with ConceptNet Numberbatch. Entries missing from the table come back as NaN
   rows and are dropped from the lexicon by build.py.
 
-Lexicon entries are embedded as bare text ("luminous", "run out"), without an
-instruction prefix: pot items and candidates are the same kind of thing, so
-the space is used symmetrically.
+Pot items and candidates are the same kind of thing, so every entry is
+embedded the same way and the space is used symmetrically. Instruction-aware
+models (Qwen3-Embedding) get a short instruction before each entry, because a
+bare word out of context tends to land near words that merely look or sound
+alike: in our first Qwen3 build, "false + name" gave "no, none, null".
 """
 
 from __future__ import annotations
@@ -24,6 +26,13 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 import numpy as np
+
+# Qwen3-Embedding's instruction format is "Instruct: {task}\nQuery:{text}".
+QWEN3_WORD_PROMPT = "Instruct: Represent the meaning of this English word or phrase\nQuery:"
+
+
+def default_prompt(model_id: str) -> str:
+    return QWEN3_WORD_PROMPT if "qwen3-embedding" in model_id.lower() else ""
 
 
 class Embedder(ABC):
@@ -38,14 +47,18 @@ def _normalise(x: np.ndarray) -> np.ndarray:
 
 
 class SentenceTransformerEmbedder(Embedder):
-    def __init__(self, model_id: str = "Qwen/Qwen3-Embedding-0.6B"):
+    def __init__(self, model_id: str = "Qwen/Qwen3-Embedding-0.6B", prompt: str = ""):
+        import torch
         from sentence_transformers import SentenceTransformer
 
         self.model_id = model_id
-        self.model = SentenceTransformer(model_id)
+        self.prompt = prompt
+        # float32: on most CPUs bfloat16 is emulated, which is slower and slightly less precise
+        self.model = SentenceTransformer(model_id, model_kwargs={"dtype": torch.float32})
 
     def embed(self, texts, batch_size=256):
-        out = self.model.encode(texts, batch_size=batch_size, show_progress_bar=True, convert_to_numpy=True)
+        out = self.model.encode(texts, prompt=self.prompt or None, batch_size=batch_size,
+                                show_progress_bar=True, convert_to_numpy=True)
         return _normalise(out)
 
 
@@ -116,9 +129,10 @@ def _read_word2vec_text(path: str, key_prefix: str) -> tuple[list[str], np.ndarr
     return keys, np.stack(rows)
 
 
-def make_embedder(backend: str, model: str, onnx_folder: str | None = None, vectors_file: str | None = None) -> Embedder:
+def make_embedder(backend: str, model: str, onnx_folder: str | None = None, vectors_file: str | None = None,
+                  prompt: str = "") -> Embedder:
     if backend == "sentence-transformers":
-        return SentenceTransformerEmbedder(model)
+        return SentenceTransformerEmbedder(model, prompt)
     if backend == "onnx":
         if not onnx_folder:
             raise ValueError("--onnx-folder is required for the onnx backend")

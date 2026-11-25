@@ -7,6 +7,7 @@
 | Field | Meaning |
 |---|---|
 | `model`, `backend` | which embedding model and backend built the space |
+| `prompt` | instruction placed before every entry when embedding ("" if none) |
 | `stand_in` | true for non-default backends; the app then shows a notice |
 | `count`, `dims` | rows and dimensions of the vector matrix |
 | `drop_top`, `explained_variance` | geometry clean-up settings and the share of variance kept |

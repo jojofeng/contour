@@ -4,7 +4,7 @@ Everything here is implemented twice and kept identical: `web/src/engine.ts` (th
 
 ## 1. The space
 
-The pipeline embeds every vocabulary entry ("luminous", "run out", "at a loss") as bare text with one embedding model, then:
+The pipeline embeds every vocabulary entry ("luminous", "run out", "at a loss") with one embedding model. Instruction-aware models (Qwen3-Embedding) get a short instruction first, "Represent the meaning of this English word or phrase", because a bare word out of context tends to land near words that only look or sound alike. The instruction used is recorded in `meta.json`. Then the pipeline:
 
 1. **Centres** the vectors (subtracts the vocabulary mean). Raw embedding spaces are anisotropic: all vectors lean one way, so every cosine similarity looks high. With the small sentence encoder we tried, almost every pair scored 0.75–0.85.
 2. **Removes the top principal component and keeps the next 256** (Mu & Viswanath 2018, "All-but-the-top"). The leading direction mostly encodes frequency, not meaning.

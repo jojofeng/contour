@@ -32,7 +32,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 340  # GitHub's limit is 360; an instructed Qwen3 build can take a few hours on CPU
     steps:
       - uses: actions/checkout@v4
 
